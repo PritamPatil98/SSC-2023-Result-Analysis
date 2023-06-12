@@ -1,0 +1,94 @@
+-------------------------------------------------------------------------------------------------------------------
+# Query Questions-
+
+-- (1) Check the 1st Data Table. 
+SELECT * FROM students_info
+
+-- (2) Check the 2nd Data Table.
+SELECT * FROM ssc_result
+
+--(3) Find the total number students mentioned in your database ?
+SELECT COUNT(*) AS number_of_students
+FROM students_info
+
+-- (4) Find all students who scored above 80% in the SSC exam ?
+SELECT * FROM ssc_result
+WHERE percentage >= 80;
+
+--(5) What is the average marks obtained by students in the SSC examination ?
+SELECT AVG(obtained_marks) AS average_marks
+FROM ssc_result ;
+
+SELECT ROUND(AVG(obtained_marks),2) AS average_marks
+FROM ssc_result ;
+
+-- (6) What are the names and percentages of the top 5 students in the SSC exam ?
+SELECT s.first_name, s.last_name, r.percentage
+FROM students_info s
+JOIN ssc_result r
+ON s.id = r.id
+ORDER BY r.percentage DESC
+LIMIT 5;
+
+--(7) Which students have a SSC result percentage greater than 80, and what are their names, grades, and percentages ?
+SELECT s.first_name, s.last_name, r.grade, r.percentage
+FROM students_info s
+JOIN ssc_result r
+ON s.id = r.id
+WHERE  r.percentage > 80
+ORDER BY r.percentage DESC;
+
+SELECT * FROM ssc_result
+WHERE percentage BETWEEN 80 and 90
+
+-- (8) What are the names and percentages of students from Yedemachindra who scored at least 80% in their SSC exams ?
+SELECT first_name, t2.percentage FROM students_info AS t1
+INNER JOIN ssc_result AS t2 
+ON t1.id = t2.id
+WHERE percentage >= 80 AND Villege = 'Yedemachindra';
+
+--(9)  What are the names of the students who scored the highest marks in the SSC exam, and what was their percentage ?
+SELECT  students_info.first_name , MAX(obtained_marks) AS highest_marks, MAX(percentage)
+FROM  ssc_result
+JOIN  students_info
+ON students_info.id  =  ssc_result.id
+GROUP BY  students_info.first_name
+ORDER BY  highest_marks  DESC;
+
+UPDATE ssc_result
+SET obtained_marks = '455'
+WHERE id = 1024
+
+SELECT * FROM students_info
+WHERE first_name LIKE 'Aditi%'
+
+
+--(10) What is the distribution of the number of students per village ?
+SELECT villege, COUNT(*) AS Total_students
+FROM students_info
+GROUP BY villege
+ORDER BY Total_students DESC ;
+
+--(11) What is the highest marks and percentage obtained by each gender in the SSC exam ?
+SELECT  gender, MAX(obtained_marks) AS highest_marks,  MAX(percentage)
+FROM students_info AS t1
+JOIN ssc_result AS t2
+ON t1.id = t2.id
+GROUP BY gender;
+
+-- Who is the First 3 Topper  in boys
+SELECT  t1.first_name, t2.obtained_marks AS highest_marks,  t2.percentage
+FROM students_info AS t1
+JOIN ssc_result AS t2
+ON t1.id = t2.id
+WHERE gender in ('Male')
+ORDER BY  highest_marks  DESC
+LIMIT 3 ;
+
+--(12)  Which village has the lowest average marks in SSC exams ?
+SELECT villege, MIN(obtained_marks) AS lowest_marks, MIN(percentage)
+FROM students_info
+JOIN ssc_result
+ON students_info.id = ssc_result.id
+GROUP BY villege
+ORDER BY lowest_marks ASC;
